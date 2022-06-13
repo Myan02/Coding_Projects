@@ -1,4 +1,4 @@
-# Coding_Projects
+# Undergrad Projects
 A collection of all of my coding projects completed during my years as an undergraduate student. 
 
 If you have any questions or would like to use any of the code, feel free to email me!!
