@@ -1,0 +1,414 @@
+package org.openjfx;
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+//import javafx.scene.paint.Paint;
+import javafx.stage.Stage;
+
+import java.lang.Math;
+
+public class App extends Application {
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+
+        Canvas canvas = new Canvas(900, 600);
+        GraphicsContext GC = canvas.getGraphicsContext2D();
+
+        Pane pane = new Pane(canvas);
+        Scene scene = new Scene(pane);
+
+        MyRectangle shape2 = new MyRectangle(450, 300, 100, 100, MyColor.SALMON);
+        MyRectangle shape1 = new MyRectangle(400, 250, 200, 200, MyColor.OLIVE);
+
+        shape1.Draw(GC);
+        shape2.Draw(GC);
+
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("My Window");
+        primaryStage.show();
+    
+        System.out.println(shape1.toString());  
+    }
+}
+
+class MyPoint {
+    
+    //private variables
+    private double x;
+    private double y;
+    MyColor color;
+
+    //constructors
+    MyPoint() {
+        this.x = 0;
+        this.y = 0;
+        this.color = MyColor.BLACK;
+    }
+
+    MyPoint(double x, double y) {
+        this.x = x;
+        this.y = y;
+        this.color = MyColor.BLACK;
+    }
+
+    MyPoint(double x, double y, MyColor color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+    }
+
+    //set Methods
+    public void SetX(double x) {
+        this.x = x;
+    }
+
+    public void SetY(double y) {
+        this.y = y;
+    }
+
+    public void SetColor(MyColor color) {
+        this.color = color;
+    }
+
+    //get methods
+    public final double GetX() {
+        return this.x;
+    }
+
+    public final double GetY() {
+        return this.y;
+    }
+
+    public final MyColor GetColor() {
+        return this.color;
+    }
+
+    //shift point
+    public void ShiftPoint(double xShift, double yShift) {
+        this.x += xShift;
+        this.y += yShift;
+    }
+
+    public void ShiftXValue(double xShift) {
+        this.x += xShift;
+    }
+
+    public void ShiftYValue(double yShift) {
+        this.y += yShift;
+    }
+
+    //distance
+    public final double DistanceFromOrigin() {
+        return Math.round(Math.sqrt(Math.pow(this.x, 2.0) + Math.pow(this.y, 2.0)));
+    }
+
+    public final double DistanceFromAnotherPoint(MyPoint secondPoint) {
+        return Math.round(Math.sqrt(Math.pow((secondPoint.GetX() - this.x), 2.0) + Math.pow((secondPoint.GetY() - this.y), 2.0)));
+    }
+
+    //angle (in degrees) with the x-axis of the line extending from this point to another point
+    public final double AngleRelativeToXAxis(MyPoint secondPoint) {
+        double theta = Math.atan2(secondPoint.GetY() - this.y, secondPoint.GetX() - this.x);
+        return Math.toDegrees(theta);
+    }
+
+    //FIX DRAW TO INCLUDE MYCOLOR CLASS AND VARIABLES FOR W AND H
+    //draw
+    public void Draw(GraphicsContext GC) {
+        GC.setFill(color.GetJavaFXColor());
+        GC.fillOval(this.x, this.y, 10, 10);
+    }
+
+    //to string
+    @Override
+    public final String toString() {
+        return "Point (" + this.x + ", " + this.y + ")\n";
+    }
+}
+
+enum MyColor {
+
+    //Colors
+    BLACK(0, 0, 0, 255),
+    WHITE(255, 255, 255, 255),
+    RED(255, 0, 0, 255),
+    LIME(0, 255, 0, 255),
+    BLUE(0, 0, 255, 255),
+    YELLOW(255, 255, 0, 255),
+    CYAN(0, 255, 255, 255),
+    MAGENTA(255, 0, 255, 255),
+    SILVER(192, 192, 192, 255),
+    GRAY(128, 128, 128, 255),
+    MAROON(128, 0, 0, 255),
+    OLIVE(128, 128, 0, 255),
+    GREEN(0, 128, 0, 255),
+    PURPLE(128, 0, 128, 255),
+    TEAL(0, 128, 128, 255),
+    NAVY(0, 0, 128, 255),
+    TOMATO(255, 99, 71, 255),
+    SALMON(250, 128, 114, 255),
+    ORANGE(255, 69, 0, 255),
+    TURQUOISE(0, 206, 209, 255),
+    VIOLET(138, 43, 226, 255),
+    PINK(255, 192, 203, 255),
+    BROWN(139, 69, 19, 255),
+    STEEL(119, 136, 153, 255);
+
+    //variables
+    private int R, G, B, A, ARGB;
+
+    //constructor
+    MyColor(int R, int G, int B, int A) {
+        SetR(R);
+        SetG(G);
+        SetB(B);
+        SetA(A);
+        SetARGB(R, G, B, A);
+    }   
+
+    //set methods
+    public void SetR(int R) {
+        this.R = R;
+    }
+
+    public void SetG(int G) {
+        this.G = G;
+    }
+
+    public void SetB(int B) {
+        this.B = B;
+    }
+
+    public void SetA(int A) {
+        this.A = A;
+    }
+
+    //get methods
+    public final int GetR() {
+        return this.R;
+    }
+
+    public final int GetG() {
+        return this.G;
+    }
+
+    public final int GetB() {
+        return this.B;
+    }
+
+    public final int GetA() {
+        return this.A;
+    }
+
+    public final int GetARGB() {
+        return this.ARGB;
+    }
+
+    //convert opacity from an int 0 - 255, into a double 0.0 , 1.0
+    public double SetOpacityToDouble() {
+        double newA = this.A /= 255;
+        return newA;
+    }
+
+    //packed color word
+    public void SetARGB(int R, int G, int B, int A) {
+        this.ARGB = (R << 24) & 0xFF000000 | (G << 16) & 0x00FF0000 | (B << 8) & 0x0000FF00 | A;
+    }
+
+    //rgb to hex code
+    public String GetHexCode() {
+        return "#" + Integer.toHexString(ARGB).toUpperCase();
+    }
+
+    //return a javafx color object to use with javafx graphics context
+    public Color GetJavaFXColor() {
+        return Color.rgb(R, G, B, SetOpacityToDouble());
+    }
+
+    @Override
+    public final String toString() {
+        return "Color picked: " + GetHexCode();
+    }
+}
+
+class MyShape {
+
+    //variables
+    MyPoint refPoint;
+    MyColor color;
+
+    double area, perimeter;
+
+    //constructors
+    MyShape() {
+        this.color = MyColor.BLACK;
+        refPoint = new MyPoint(0, 0);
+        area = perimeter = 0.0;
+    }
+
+    MyShape(int x, int y, MyColor color) {
+        this.color = color;
+        refPoint = new MyPoint(x, y, color);
+        area = perimeter = 0.0;
+    }
+
+    //set methods
+    public void SetRefPoint(int x, int y) {
+        this.refPoint.SetX(x);
+        this.refPoint.SetY(y);
+    }
+
+    public void SetColor(MyColor color) {
+        this.color = color;
+        this.refPoint.color = color;
+    }
+
+    //get methods
+    public MyPoint GetRefPoint() {
+        return refPoint;
+    }
+
+    public MyColor GetColor() {
+        return color;
+    }
+
+    //returns area of MyShape (currently 0)
+    public double Area() {
+        return area;
+    }
+
+    //returns perimeter of MyShape (currently 0)
+    public double Perimeter() {
+        return perimeter;
+    }
+
+    //draws MyShape object (fills the canvas with color)
+    public void Draw(GraphicsContext GC) {
+        GC.setFill(color.GetJavaFXColor());
+        GC.fillRect(0, 0, GC.getCanvas().getWidth(), GC.getCanvas().getHeight());
+    }
+
+    //returns a description of my shape as a string type
+    @Override
+    public String toString() {
+        return "My shape has reference point (" + refPoint.GetX() + ", " + refPoint.GetY() + ") and color: " + color.GetHexCode();
+    }
+
+}
+
+class MyRectangle extends MyShape {
+
+    //variables
+    double width, height;
+
+    //constructors
+    MyRectangle() {
+        
+        super();
+
+        this.width = 200;
+        this.height = 100;
+
+        super.perimeter = (height * 2) + (width * 2);
+        super.area = height * width;
+    }
+
+    MyRectangle(double width, double height) {
+        
+        super();
+
+        this.width = width;
+        this.height = height;
+
+        super.perimeter = (height * 2) + (width * 2);
+        super.area = height * width;
+    }
+
+    MyRectangle(int x, int y, double width, double height, MyColor color) {
+
+        super(x, y, color);
+
+        this.width = width;
+        this.height = height;
+
+        super.perimeter = (height * 2) + (width * 2);
+        super.area = height * width;
+    }
+
+    //set methods
+
+    //get methods
+    @Override
+    public MyPoint GetRefPoint() {
+        return super.GetRefPoint();
+    }
+
+    public double GetWidth() {
+        return width;
+    }
+
+    public double GetHeight() {
+        return height;
+    }
+
+    //FIX THE VARIABLES MAKE THEM INTO GET METHODS SO YOU CAN MAKE MYSHAPES' VARIABLES PRIVATE
+    //area of the rectangle
+    @Override
+    public double Area() {
+        super.area = height * width;
+        return super.area;
+    }
+
+    @Override
+    public double Perimeter() {
+        super.perimeter = (height * 2) + (width * 2);
+        return super.perimeter;
+    }
+
+    @Override
+    public String toString() {
+        return "My rectangle's properties: \n" +
+               "Reference Point: (" + super.refPoint.GetX() + ", " + super.refPoint.GetY() + ") \n" +
+               "Width: " + width + "\n" + 
+               "Height: " + height + "\n" +
+               "Perimeter: " + super.perimeter + "\n" +
+               "Area: " + super.area;
+    }
+
+    @Override
+    public void Draw(GraphicsContext GC) {
+        GC.setFill(super.color.GetJavaFXColor());
+        GC.fillRect(super.refPoint.GetX(), super.refPoint.GetY(), width, height);;
+    }
+}
+
+
+
+
+/* 
+   //get methods
+    public final int GetR() {
+        return this.R;
+    }
+
+    public final int GetG() {
+        return this.G;
+    }
+
+    public final int GetB() {
+        return this.B;
+    }
+
+    public final double GetA() {
+        return this.A;
+    }    
+*/
